@@ -1,14 +1,14 @@
 import streamlit as st
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 from datetime import date
 
-# Google Sheets setup
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-client = gspread.authorize(creds)
+# Google Sheets setup using Streamlit Secrets
+creds_dict = st.secrets["google_credentials"]
+credentials = service_account.Credentials.from_service_account_info(creds_dict)
 
-sheet = client.open("Employee Attendance").sheet1  # Replace with your sheet name
+client = gspread.authorize(credentials)
+sheet = client.open("Employee Attendance").sheet1  # Replace with your actual sheet name
 
 # Streamlit UI
 st.title("Department Attendance Form")
